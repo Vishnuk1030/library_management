@@ -5,31 +5,68 @@
 <div class="container mt-2">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">Manage</div>
+            <div class="card-header">Manage Books</div>
             <div class="card-body">
+
+                <form method="GET" action="{{ route('index') }}" class="mb-3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input type="text" name="search" class="form-control"
+                                   placeholder="Search title, author, description..."
+                                   value="{{ request('search') }}">
+                        </div>
+                        <div class="col-md-3">
+                            <select name="author_name" class="form-control">
+                                <option value="">-- Filter by Author --</option>
+                                @foreach($authors as $author)
+                                    <option value="{{ $author }}" {{ request('author_name') == $author ? 'selected' : '' }}>
+                                        {{ $author }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                            <a href="{{ route('index') }}" class="btn btn-secondary">Reset</a>
+                        </div>
+                    </div>
+                </form>
+
                 <div class="table">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">sl.No</th>
+                                <th scope="col">Sl.No</th>
                                 <th scope="col">Book Title</th>
-                                <th scope="col">Book decription</th>
+                                <th scope="col">Book Description</th>
                                 <th scope="col">Author</th>
                                 <th scope="col">Author Email</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                <td>@mdo</td>
-                            </tr>
+                            @forelse ($datas as $index => $data)
+                                <tr>
+                                    <th scope="row">{{ $datas->firstItem() + $index }}</th>
+                                    <td>{{ $data->title }}</td>
+                                    <td>{{ $data->description }}</td>
+                                    <td>{{ $data->author_name }}</td>
+                                    <td>{{ $data->author_email }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <th colspan="5" class="text-center">No data found</th>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
+
+                {{ $datas->withQueryString()->links() }}
+
             </div>
         </div>
     </div>
-    @endsection
+</div>
+
+@endsection
+

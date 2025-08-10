@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
         <a class="navbar-brand" href="{{url('/')}}">Library Management</a>
@@ -10,11 +9,12 @@
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{route('author.create')}}">Author</a>
+                    <a class="nav-link {{Route::is('author.create') ? 'active' : ''}}" aria-current="page"
+                        href="{{route('author.create')}}">Author</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{route('book.create')}}">Book</a>
+                    <a class="nav-link  {{Route::is('book.create') ? 'active' : ''}}" href="{{route('book.create')}}">Book</a>
                 </li>
 
             </ul>

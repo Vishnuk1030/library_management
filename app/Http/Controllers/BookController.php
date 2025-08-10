@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Authors;
 use App\Models\Books;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
@@ -30,9 +32,31 @@ class BookController extends Controller
         return redirect()->route('book.create')->with('success', 'Book created successfully');
     }
 
-    public function manage()
-    {
 
-        return view('home');
+    public function index(Request $request)
+    {
+        $query = DB::table('books')
+            ->join('authors', 'books.author_id', '=', 'authors.id')
+            ->select('books.id', 'books.title', 'books.description', 'authors.author_name', 'authors.author_email');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('books.title', 'like', "%{$search}%")
+                    ->orWhere('books.description', 'like', "%{$search}%")
+                    ->orWhere('authors.author_name', 'like', "%{$search}%")
+                    ->orWhere('authors.author_email', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('author_name')) {
+            $query->where('authors.author_name', $request->author_name);
+        }
+
+        $datas = $query->paginate(10)->withQueryString();
+
+        $authors = DB::table('authors')->select('author_name')->distinct()->pluck('author_name');
+
+        return view('home', compact('datas', 'authors'));
     }
 }
