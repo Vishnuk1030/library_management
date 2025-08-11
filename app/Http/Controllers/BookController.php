@@ -36,8 +36,8 @@ class BookController extends Controller
     public function index(Request $request)
     {
         $query = DB::table('books')
-            ->join('authors', 'books.author_id', '=', 'authors.id')
-            ->select('books.id', 'books.title', 'books.description', 'authors.author_name', 'authors.author_email');
+                ->join('authors', 'books.author_id', '=', 'authors.id')
+                ->select('books.id', 'books.title', 'books.description', 'authors.author_name', 'authors.author_email');
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -53,7 +53,7 @@ class BookController extends Controller
             $query->where('authors.author_name', $request->author_name);
         }
 
-        $datas = $query->paginate(10)->withQueryString();
+        $datas = $query->paginate(5)->withQueryString();
 
         $authors = DB::table('authors')->select('author_name')->distinct()->pluck('author_name');
 
